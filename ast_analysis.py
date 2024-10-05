@@ -8,27 +8,25 @@ class ASTAnalyzer(ast.NodeVisitor):
 
     def visit_FunctionDef(self, node):
         self._check_identifier_length(node.name)
-        self._enter_block(node)
-        self.generic_visit(node)
-        self._leave_block()
+        self.generic_visit(node)  # Visit function body without increasing nesting level
 
     def visit_If(self, node):
-        self._enter_block(node)
+        self._enter_block()
         self.generic_visit(node)
         self._leave_block()
 
     def visit_For(self, node):
-        self._enter_block(node)
+        self._enter_block()
         self.generic_visit(node)
         self._leave_block()
 
     def visit_While(self, node):
-        self._enter_block(node)
+        self._enter_block()
         self.generic_visit(node)
         self._leave_block()
 
     def visit_With(self, node):
-        self._enter_block(node)
+        self._enter_block()
         self.generic_visit(node)
         self._leave_block()
 
@@ -36,7 +34,7 @@ class ASTAnalyzer(ast.NodeVisitor):
         if len(identifier) == 13:
             self.has_long_identifiers = True
 
-    def _enter_block(self, node):
+    def _enter_block(self):
         self.current_nesting_level += 1
         if self.current_nesting_level > self.max_nesting_level:
             self.max_nesting_level = self.current_nesting_level
